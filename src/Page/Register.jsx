@@ -47,7 +47,6 @@ class Register extends Component {
         if (values.cardType === '1' && !regExp.test(values.idCard)) {
             return this.Notice('Warning', 'Please check your NRIC number！');
         }
-        
 
 
         values.headImgPath = this.state.imageUrl;
@@ -151,7 +150,11 @@ class Register extends Component {
                         </Form.Item>
                         <Form.Item
                             name='mobile'
-                            rules={[{required: true, message: 'Please input your mobile number!'}]}
+                            rules={[{
+                                required: true,
+                                pattern: new RegExp(/^[0-9]{8}$/),
+                                message: 'Please input your mobile number!'
+                            }]}
                         >
                             <Input prefix={<MobileOutlined className="site-form-item-icon"/>}
                                    placeholder=" Mobile Number"/>
