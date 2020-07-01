@@ -13,6 +13,7 @@ import {getBase64, beforeUpload} from '../Plugin/UpLoad'
 import {UserRegister} from '../ajax/Index'
 import logo from "../Images/logo.png";
 
+
 class Register extends Component {
     state = {
         loading: false,
@@ -42,6 +43,12 @@ class Register extends Component {
         this.setState({
             pageLoading: true
         });
+        const regExp = /^[STFG]\d{7}[A-Z]$/;
+        if (values.cardType === '1' && !regExp.test(values.idCard)) {
+            return this.Notice('Warning', 'Please check your NRIC number！');
+        }
+        
+
 
         values.headImgPath = this.state.imageUrl;
         UserRegister(values).then((res) => {
@@ -104,7 +111,7 @@ class Register extends Component {
         const prefixSelector = (
             <Form.Item name="cardType" noStyle>
                 <Select style={{width: 100}}>
-                    <Select.Option value="1">ID Card</Select.Option>
+                    <Select.Option value="1">NRIC</Select.Option>
                     <Select.Option value="2">Passport</Select.Option>
                 </Select>
             </Form.Item>
@@ -157,7 +164,7 @@ class Register extends Component {
                         </Form.Item>
                         <Form.Item
                             name='idCard'
-                            rules={[{required: true, message: 'Please input your ID number!'}]}
+                            rules={[{required: true, message: 'Please input your ID Number!'}]}
                         >
                             <Input addonBefore={prefixSelector} placeholder="ID Number"/>
                         </Form.Item>
