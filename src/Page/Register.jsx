@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
-import {Form, Input, Button, Select, Upload, Spin, Modal, Radio} from 'antd';
+import {Button, Form, Input, Modal, Radio, Select, Spin, Upload} from 'antd';
 import {UPLOAD} from '../ajax/Urls'
 import {
-    UserOutlined,
-    MobileOutlined,
     EnvironmentOutlined,
-    MailOutlined,
     LoadingOutlined,
+    MailOutlined,
+    MobileOutlined,
     PlusOutlined,
+    UserOutlined,
 } from '@ant-design/icons';
-import {getBase64, beforeUpload} from '../Plugin/UpLoad'
+import {beforeUpload, getBase64} from '../Plugin/UpLoad'
 import {UserRegister} from '../ajax/Index'
 import logo from "../Images/logo.png";
 
@@ -144,7 +144,7 @@ class Register extends Component {
                     <div className="box-shadow">
                         <Form.Item
                             name='name'
-                            rules={[{required: true, message: 'Please input your name!'}]}
+                            rules={[{required: true, max: 30, message: 'Please input your name!'}]}
                         >
                             <Input prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="Name"/>
                         </Form.Item>
@@ -161,13 +161,13 @@ class Register extends Component {
                         </Form.Item>
                         <Form.Item
                             name='email'
-                            rules={[{required: true, type: 'email', message: 'Please input your Email!'}]}
+                            rules={[{required: true, max: 50, type: 'email', message: 'Please input your Email!'}]}
                         >
                             <Input prefix={<MailOutlined className="site-form-item-icon"/>} placeholder="Email"/>
                         </Form.Item>
                         <Form.Item
                             name='idCard'
-                            rules={[{required: true, message: 'Please input your ID Number!'}]}
+                            rules={[{required: true,max:30, message: 'Please input your ID Number!'}]}
                         >
                             <Input addonBefore={prefixSelector} placeholder="ID Number"/>
                         </Form.Item>
