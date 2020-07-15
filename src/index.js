@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
+import 'antd/es/modal/style';
+import 'antd/es/slider/style';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 

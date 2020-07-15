@@ -1,5 +1,5 @@
 import {message} from 'antd';
-import EXIF from "exif-js/exif";
+/*import EXIF from "exif-js/exif";*/
 
 export const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -12,9 +12,7 @@ export const beforeUpload = (file) => {
     if (!isJpgOrPng) {
         message.error('You can only upload JPG/PNG file!');
     }
-    const or=getImageTag(file).then(res=>{
-        alert(res);
-    })
+
     return isJpgOrPng;
 
 
@@ -44,14 +42,14 @@ export const transformFile=(file)=>{
                     context.drawImage(img, x, y, this.width, this.height);
 
                     //获取信息
-                    EXIF.getData(file, function() {
+                  /*  EXIF.getData(file, function() {
                         // alert(EXIF.pretty(this));
                         EXIF.getAllTags(this);
                         //alert(EXIF.getTag(this, 'Orientation'));
                         const Orientation = EXIF.getTag(this, 'Orientation');
                         //alert(Orientation);
                         //return;
-                    });
+                    });*/
 
                     canvas.toBlob((blob) => {
                         let imgFile = new File([blob], file.name, {type: file.type}); // 将blob对象转化为图片文件
@@ -71,11 +69,11 @@ export function getUrlToken(name, str) {
     if (r != null) return decodeURIComponent(r[2]);
     return null;
 }
-
+/*
 export const getImageTag = (file) => {
     if (!file) return 0;
    return new Promise(() => {
-        /* eslint-disable func-names */
+        /!* eslint-disable func-names *!/
         // 箭头函数会修改this，所以这里不能用箭头函数
         EXIF.getData(file, function () {
             const o = EXIF.getTag(this,'Orientation');
@@ -83,4 +81,4 @@ export const getImageTag = (file) => {
             return(o);
         });
     });
-};
+};*/

@@ -1,16 +1,9 @@
 import React from 'react';
 import {Button, Checkbox, Form, Input, Modal, Select, Spin, Upload} from 'antd';
 import {UPLOAD} from '../ajax/Urls'
-import {
-    IdcardOutlined,
-    LoadingOutlined,
-    MailOutlined,
-    MobileOutlined,
-    PlusOutlined,
-    UserOutlined
-} from '@ant-design/icons';
-import {beforeUpload, getUrlToken} from '../Plugin/UpLoad'
-import {UserRegister} from '../ajax/Index'
+import {IdcardOutlined, LoadingOutlined, MobileOutlined, PlusOutlined, UserOutlined} from '@ant-design/icons';
+import {beforeUpload, transformFile} from '../Plugin/UpLoad'
+import {getAgreements, UserRegister} from '../ajax/Index'
 import logo from "../Images/logo.png";
 
 const props = {
@@ -18,49 +11,24 @@ const props = {
     showUploadList: false,
     action: UPLOAD,
     beforeUpload: beforeUpload,
-    transformFile(file) {
-        return new Promise(resolve => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                const canvas = document.createElement('canvas');
-                const img = document.createElement('img');
-                img.src = reader.result;
-                img.onload = function () {
-                    let canvas = document.createElement('canvas');
-                    let context = canvas.getContext('2d');
-
-                    let originWidth = this.width < this.height ? this.width : this.height;
-                    let originHeight = this.width < this.height ? this.width : this.height;
-
-                    canvas.width = originWidth;
-                    canvas.height = originHeight;
-
-                    let x = (originWidth - this.width) / 2;
-                    let y = (originHeight - this.height) / 2;
-                    context.clearRect(0, 0, originWidth, originHeight);
-                    context.drawImage(img, x, y, this.width, this.height);
-
-                    canvas.toBlob((blob) => {
-                        let imgFile = new File([blob], file.name, {type: file.type}); // 将blob对象转化为图片文件
-
-                        resolve(imgFile);
-                    }, file.type, 0.2); // file压缩的图片类型
-
-                }
-            };
-        });
-    },
+    transformFile: transformFile
 
 }
 
 class Register extends React.Component {
     formRef = React.createRef();
-
+    tipsRef =React.createRef();
     constructor(props) {
         super(props);
-        // this.state.email = window.location.pathname.substring(1);
-        this.state.email = getUrlToken('email', window.location.search)
+        //this.state.agreement='';
+        if (window.location.pathname.substring(1)) {
+            const array = window.location.pathname.substring(1).split('/');
+            this.state.identificationCode = array[0];
+            /*if(array.length>1){
+                this.state.email = array[1];
+            }*/
+        }
+
     }
 
     state = {
@@ -74,10 +42,16 @@ class Register extends React.Component {
     };
 
     Agreement() {
-        Modal.info({
-            title: 'Agreement',
-            content: 'Some descriptions',
+        getAgreements().then((res) => {
+            if (res.code === 200) {
+                Modal.info({
+                    title: 'Agreement',
+                    content: (<div className="info" dangerouslySetInnerHTML={{__html: res.data}}></div>),
+                })
+            }
         })
+        // console.log(this.Agreements);
+
     }
 
     handleChange = info => {
@@ -116,11 +90,12 @@ class Register extends React.Component {
         });
         const regExp = /^[STFG]\d{7}[A-Z]$/;
         if (values.cardType === '1' && !regExp.test(values.idCard)) {
-            return this.Notice('Fail', 'Please check your NRIC number！');
+            return this.Notice('Fail', 'Please check your NRIC number');
         }
 
         values.headImgPath = this.state.imageUrl;
-        values.name = values.name + values.name;
+        //   values.name = values.name + values.name2;
+        values.identificationCode = this.state.identificationCode;
         UserRegister(values).then((res) => {
             switch (res.code) {
                 case 200:
@@ -131,7 +106,7 @@ class Register extends React.Component {
                     return this.Notice('Fail', res.msg);
             }
         }).catch((error) => {
-            this.Notice('Warning', 'Please check your network！');
+            this.Notice('Warning', 'Please check your network');
         })
     }
 
@@ -207,11 +182,19 @@ class Register extends React.Component {
                 },
             },
         };
-        const {imageUrl, pageLoading, email, fileList} = this.state;
+        const prefixSelector = (
+            <Form.Item name="cardType" noStyle>
+                <Select style={{width: 122,textAlign:'left'}}>
+                    <Select.Option value="1"><IdcardOutlined className="site-form-item-icon"/> NRIC</Select.Option>
+                    <Select.Option value="2"><IdcardOutlined className="site-form-item-icon"/> Passport</Select.Option>
+                </Select>
+            </Form.Item>
+        );
+        const {imageUrl, pageLoading, email} = this.state;
         return (
             <Spin tip="Loading..." spinning={pageLoading}>
                 <div className="text-center padding30">
-                    <img src={logo} alt="logo" width="165"/>
+                    <img src={logo} alt="logo" width="165" className="logo"/>
                 </div>
                 <Form className="form"
                       name="form"
@@ -225,9 +208,8 @@ class Register extends React.Component {
                       }}
                       onFinish={this.onUserRegister}
                 >
-                    {/*  <p>Please upload a recent photograph of yourself without a mask.</p>*/}
                     <Form.Item className="avatar-box" name="headImgPath"
-                               rules={[{required: true, message: 'Please upload photo!'}]}>
+                               rules={[{required: true, message: 'Please upload photo'}]}>
                         {/*<ImgCrop rotate>*/}
 
                         <Upload
@@ -241,50 +223,49 @@ class Register extends React.Component {
                         </Upload>
                         {/* </ImgCrop>*/}
                     </Form.Item>
-                    {/*<p>Please upload a recent photograph of yourself without a mask.</p>*/}
                     <div className="box-shadow">
+                        <div className="Tips" ref={this.tipsRef}>Please upload a recent photograph of yourself without a mask.</div>
                         <Form.Item
                             name='name'
-                            label="&nbsp;"
                             rules={[{required: true, message: 'Required field'}]}
                         >
-                            <Input prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="First Name"
+                            <Input prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="Full Name"
                                    maxLength={30}/>
                         </Form.Item>
-                        <Form.Item
+                        {/*<Form.Item
                             name='name2'
                             label="&nbsp;"
                             rules={[{required: true, message: 'Required field'}]}
                         >
                             <Input prefix={<UserOutlined className="site-form-item-icon"/>} placeholder="Last Name"
                                    maxLength={30}/>
-                        </Form.Item>
+                        </Form.Item>*/}
                         <Form.Item
                             name='mobile'
-                            label="&nbsp;"
+
                             rules={[{
                                 required: true,
-                                message: 'Required field!'
+                                message: 'Required field'
                             }, {
                                 pattern: new RegExp(/^[0-9]{8}$/),
-                                message: 'Please input a valid mobile number!'
+                                message: 'Please input a valid mobile number'
                             }]}
                         >
                             <Input prefix={<MobileOutlined className="site-form-item-icon"/>}
                                    placeholder="Mobile Number" maxLength={8}/>
                         </Form.Item>
-                        <Form.Item
+                        {/* <Form.Item
                             name='email'
                             label="&nbsp;"
                             rules={[{required: true, message: 'Required field'}, {
-                                type: 'email', message: 'Please input a valid Email!'
+                                type: 'email', message: 'Please input a valid Email'
 
                             }]}
                         >
                             <Input prefix={<MailOutlined className="site-form-item-icon"/>} placeholder="Email"
                                    maxLength={50} disabled={email}/>
-                        </Form.Item>
-                        <Form.Item name="cardType" label="&nbsp;"
+                        </Form.Item>*/}
+                        {/* <Form.Item name="cardType" label="&nbsp;"
                                    rules={[{required: true, message: 'Required field'}]}
                         >
                             <Select>
@@ -294,14 +275,12 @@ class Register extends React.Component {
                                                value="2"><IdcardOutlined
                                     className="site-form-item-icon"/> Passport</Select.Option>
                             </Select>
-                        </Form.Item>
+                        </Form.Item>*/}
                         <Form.Item
                             name='idCard'
-                            label="&nbsp;"
                             rules={[{required: true, message: 'Required field'}]}
                         >
-                            <Input prefix={<IdcardOutlined className="site-form-item-icon"/>}
-                                   placeholder="ID Number" maxLength={30}/>
+                            <Input addonBefore={prefixSelector} placeholder="ID Number" maxLength={30}/>
                         </Form.Item>
                         {/* <Form.Item name="sex">
                             <Radio.Group optionType="default" style={{width: "100%", textAlign: "center"}}>
@@ -313,7 +292,7 @@ class Register extends React.Component {
                             <Input prefix={<EnvironmentOutlined className="site-form-item-icon"/>}
                                    placeholder="Home Address" maxLength={300}/>
                         </Form.Item>*/}
-                        <Form.Item label="&nbsp;">
+                        <Form.Item>
                             <Form.Item name='agreement' valuePropName="checked" noStyle
                                        rules={[
                                            {validator: (_, value) => value ? Promise.resolve() : Promise.reject('Consent required')},
@@ -322,6 +301,8 @@ class Register extends React.Component {
                             </Form.Item>
                             <a onClick={this.Agreement}>Privacy Clause</a>.
                         </Form.Item>
+                        {/*  <Divider/>
+                        <div className="Tips2">Please upload a recent photograph of yourself without a mask.</div>*/}
                     </div>
                     <Form.Item className="text-center btn-box" {...tailFormItemLayout}>
                         <Button type="primary" size="large" className="btn-register" htmlType="submit">
