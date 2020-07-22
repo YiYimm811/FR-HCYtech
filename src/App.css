@@ -3,26 +3,13 @@
   max-width: 680px;
   margin:0 auto;
 }
-.avatar-box{
-  width: 120px !important;
-  text-align: center;
-  margin: 0 auto;
-}
 
-.avatar-uploader > .ant-upload {
-  width: 120px !important;
-  height: 120px !important;
-  background: url("Images/avater.png") no-repeat center;
-}
+
+
 .text-center{
   text-align: center;
 }
-.anticon-plus{
-  display: none;
-}
-.ant-upload-text{
-  display: none;
-}
+/**/
 .marginAuto {
   margin: 0 auto;
 }
@@ -34,9 +21,53 @@
   border-radius: 8px;
 }
 
-.form {
-  margin: 5vw auto;
+.form-shadow {
+  box-shadow: 0 2px 4px 0 #999999;
+  border-radius: 8px;
+  padding: 50px 30px 10px;
+  margin-top: 20px;
 }
+
+@media screen and (max-width: 800px) {
+  .avatar-box {
+    width: 120px !important;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .form {
+    margin: 5vw auto;
+  }
+
+  .anticon-plus {
+    display: none;
+  }
+
+  .ant-upload-text {
+    display: none;
+  }
+
+  .avatar-uploader > .ant-upload {
+    width: 120px !important;
+    height: 120px !important;
+    background: url("Images/avater.png") no-repeat center;
+  }
+
+  .ant-form-item-label > label::after {
+    content: none;
+  }
+
+  .ant-upload.ant-upload-select-picture-card > .ant-upload {
+    display: table-cell;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    text-align: center;
+    vertical-align: middle;
+    overflow: hidden;
+  }
+}
+
 
 .padding30 {
   padding: 30px 30px 15px;
@@ -84,9 +115,7 @@
   }
 }
 
-.ant-form-item-label > label::after {
-  content: none;
-}
+/**/
 
 #imgs {
   background-position: center;
@@ -96,15 +125,7 @@
   height: 100%
 }
 
-.ant-upload.ant-upload-select-picture-card > .ant-upload {
-  display: table-cell;
-  width: 100%;
-  height: 100%;
-  padding: 8px;
-  text-align: center;
-  vertical-align: middle;
-  overflow: hidden;
-}
+/**/
 
 .info p {
   width: 100% !important;
@@ -126,4 +147,36 @@
   padding: 0 15px;
   font-size: 12px;
   color: #999999;
+}
+
+/*8888888888888888888888888888*/
+.upload-list-inline .ant-upload-list-item {
+  float: left;
+  width: 200px;
+  margin-right: 8px;
+}
+
+.upload-list-inline [class*='-upload-list-rtl'] .ant-upload-list-item {
+  float: right;
+}
+
+.upload-list-inline .ant-upload-animate-enter {
+  animation-name: uploadAnimateInlineIn;
+}
+
+.upload-list-inline .ant-upload-animate-leave {
+  animation-name: uploadAnimateInlineOut;
+}
+
+.react-html5-camera-photo > img, .react-html5-camera-photo > video {
+  width: 100%;
+}
+
+/************camera*************/
+.demo-image-preview {
+  position: relative;
+  text-align: center;
+}
+.demo-image-preview > img {
+  width: 100%;
 }

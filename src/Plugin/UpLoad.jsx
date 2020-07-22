@@ -7,10 +7,13 @@ export const getBase64 = (img, callback) => {
     reader.readAsDataURL(img);
 }
 
-export const beforeUpload = (file) => {
+export const beforeUpload = (file,fileList) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
         message.error('You can only upload JPG/PNG file!');
+    }
+    if(fileList.length>1){
+        fileList=[];
     }
 
     return isJpgOrPng;
