@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Checkbox, Form, Input, Modal, Select, Space, Spin, Upload} from 'antd';
 import {UPLOAD} from '../ajax/Urls'
-import {IdcardOutlined, MobileOutlined, UploadOutlined, UserOutlined} from '@ant-design/icons';
+import {IdcardOutlined, MobileOutlined, UploadOutlined, UserOutlined,CameraOutlined} from '@ant-design/icons';
 import {beforeUpload, transformFile} from '../Plugin/UpLoad'
 import {getAgreements, postPhoto, UserRegister} from '../ajax/Index'
 import logo from "../Images/logo.png";
@@ -171,10 +171,27 @@ class RegisterPC extends React.Component {
         let data={
             fileStr:this.state.dataUri
         };
+        const fileList={
+            uid: '1',
+            name: 'photo.png',
+            status: 'uploading',
+            url: this.state.dataUri,
+        }
+        this.setState({dataUri: false,Camera: false,fileList:[fileList]});
         postPhoto(data).then(res=>{
-            console.log(res)
-        })
-        this.setState({dataUri: false,Camera: false});
+            if(res.code===200){
+               fileList.status= 'done';
+                fileList.url=res.data.url;
+               // this.setState({fileList:fileList});
+            }else{
+                fileList.status= 'error';
+            }
+            this.setState({fileList:[fileList]});
+        }).catch(()=>{
+            fileList.status= 'error';
+            this.setState({fileList:[fileList]});
+        });
+
     }
     Remake=()=>{
         this.setState({dataUri: false});
@@ -257,7 +274,7 @@ class RegisterPC extends React.Component {
                                rules={[{required: true, message: 'Please upload photo'}]}>
 
                             <Button className="marginR20" onClick={() => this.TakePhoto(true)}>
-                                TakePhoto
+                                <CameraOutlined/>TakePhoto
                             </Button>
                         <Form.Item noStyle>
                             <Upload name="file"
@@ -281,9 +298,12 @@ class RegisterPC extends React.Component {
                         {dataUri&&
                         (<div className='demo-image-preview '>
                             <img src={dataUri} />
-                            <Space>
-                                <Button onClick={this.Remake}>Remake</Button>
-                                <Button  onClick={this.uploadPhoto}>Upload</Button>
+                            <Space className="marginT25">
+                                <Button onClick={this.Remake}>
+                                    <CameraOutlined/>
+                                    Remake
+                                </Button>
+                                <Button  onClick={this.uploadPhoto}><UploadOutlined />Upload</Button>
                             </Space>
 
                         </div>)}

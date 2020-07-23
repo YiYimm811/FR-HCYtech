@@ -30,6 +30,9 @@
 .marginR20{
   margin-right: 20px;
 }
+.marginT25{
+  margin-Top: 25px;
+}
 
 @media screen and (max-width: 800px) {
   .avatar-box {
@@ -182,4 +185,7 @@
 }
 .demo-image-preview > img {
   width: 100%;
+}
+.anticon.anticon-delete{
+  display: none;
 }
