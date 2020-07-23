@@ -1,9 +1,9 @@
 import React from 'react';
-import {Button, Checkbox, Form, Input, Modal, Select, Spin, Upload} from 'antd';
+import {Button, Checkbox, Form, Input, Modal, Select, Space, Spin, Upload} from 'antd';
 import {UPLOAD} from '../ajax/Urls'
 import {IdcardOutlined, MobileOutlined, UploadOutlined, UserOutlined} from '@ant-design/icons';
 import {beforeUpload, transformFile} from '../Plugin/UpLoad'
-import {getAgreements, UserRegister} from '../ajax/Index'
+import {getAgreements, UserRegister,postPhoto} from '../ajax/Index'
 import logo from "../Images/logo.png";
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
@@ -28,7 +28,8 @@ class RegisterPC extends React.Component {
         fileList: [],
         pageLoading: false,
         Tips: true,
-        Camera: false
+        Camera: false,
+        dataUri:false
     };
 
     Agreement() {
@@ -166,7 +167,18 @@ class RegisterPC extends React.Component {
     TakePhoto = (flag) => {
         this.setState({Camera: flag})
     }
-
+    uploadPhoto=()=>{
+        let data={
+            fileStr:this.state.dataUri
+        };
+        postPhoto(data).then(res=>{
+            console.log(res)
+        })
+        this.setState({dataUri: false,Camera: false});
+    }
+    Remake=()=>{
+        this.setState({dataUri: false});
+    }
     render() {
         const layout = {
             labelCol: {
@@ -240,6 +252,10 @@ class RegisterPC extends React.Component {
                     </Form.Item>
                     <Form.Item className="avatar-box" name="headImgPath" label="photograph"
                                rules={[{required: true, message: 'Please upload photo'}]}>
+
+                            <Button className="marginR20" onClick={() => this.TakePhoto(true)}>
+                                TakePhoto
+                            </Button>
                         <Form.Item noStyle>
                             <Upload name="file"
                                     style={{width: '50%'}}
@@ -252,13 +268,6 @@ class RegisterPC extends React.Component {
 
                             </Upload>
                         </Form.Item>
-                        <Form.Item noStyle>
-                            <Button onClick={() => this.TakePhoto(true)}>
-                                TakePhoto
-                            </Button>
-                        </Form.Item>
-
-
                     </Form.Item>
                     <Modal
                         title="Take Photo"
@@ -266,14 +275,21 @@ class RegisterPC extends React.Component {
                         onCancel={() => this.TakePhoto(false)}
                         footer={false}
                     >
-                        <div className='demo-image-preview '>
+                        {dataUri&&
+                        (<div className='demo-image-preview '>
                             <img src={dataUri} />
-                        </div>
-                        <Camera
+                            <Space>
+                                <Button onClick={this.Remake}>Remake</Button>
+                                <Button  onClick={this.uploadPhoto}>Upload</Button>
+                            </Space>
+
+                        </div>)}
+                        {!dataUri&&<Camera
                             onTakePhoto={(dataUri) => {
                                 this.handleTakePhoto(dataUri);
                             }}
-                        />
+                        />}
+
                     </Modal>
                     <Form.Item label="Privacy Clause">
                         <Form.Item name='agreement' valuePropName="checked" noStyle
