@@ -3,7 +3,7 @@ import {Button, Checkbox, Form, Input, Modal, Select, Space, Spin, Upload} from 
 import {UPLOAD} from '../ajax/Urls'
 import {IdcardOutlined, MobileOutlined, UploadOutlined, UserOutlined} from '@ant-design/icons';
 import {beforeUpload, transformFile} from '../Plugin/UpLoad'
-import {getAgreements, UserRegister,postPhoto} from '../ajax/Index'
+import {getAgreements, postPhoto, UserRegister} from '../ajax/Index'
 import logo from "../Images/logo.png";
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
@@ -246,7 +246,10 @@ class RegisterPC extends React.Component {
                     <Form.Item
                         name='idCard'
                         label="ID Number"
-                        rules={[{required: true, message: 'Required field'}]}
+                        rules={[{required: true, message: 'Required field'}, {
+                            pattern: new RegExp(/^[A-Za-z0-9]+$/),
+                            message: 'Please input a valid ID number'
+                        }]}
                     >
                         <Input addonBefore={prefixSelector} placeholder="ID Number" maxLength={30}/>
                     </Form.Item>
