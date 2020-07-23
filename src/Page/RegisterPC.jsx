@@ -274,7 +274,7 @@ class RegisterPC extends React.Component {
                                rules={[{required: true, message: 'Please upload photo'}]}>
 
                             <Button className="marginR20" onClick={() => this.TakePhoto(true)}>
-                                <CameraOutlined/>TakePhoto
+                                <CameraOutlined/>Take Photo
                             </Button>
                         <Form.Item noStyle>
                             <Upload name="file"
