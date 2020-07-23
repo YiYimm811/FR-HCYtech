@@ -189,3 +189,7 @@
 .anticon.anticon-delete{
   display: none;
 }
+.ant-upload-list-picture .ant-upload-list-item-thumbnail img, .ant-upload-list-picture-card .ant-upload-list-item-thumbnail img {
+  height: auto;
+
+}
