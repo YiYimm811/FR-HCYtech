@@ -1,7 +1,7 @@
 import React from 'react';
-import {Button, Checkbox, Form, Input, Modal, Select, Space, Spin, Upload} from 'antd';
+import {Button, Checkbox, Form, Input, Modal, Select, Space, Spin, Upload,Tooltip} from 'antd';
 import {UPLOAD} from '../ajax/Urls'
-import {IdcardOutlined, MobileOutlined, UploadOutlined, UserOutlined,CameraOutlined} from '@ant-design/icons';
+import {IdcardOutlined, MobileOutlined, UploadOutlined, UserOutlined,CameraOutlined,QuestionCircleOutlined} from '@ant-design/icons';
 import {beforeUpload, transformFile} from '../Plugin/UpLoad'
 import {getAgreements, postPhoto, UserRegister} from '../ajax/Index'
 import logo from "../Images/logo.png";
@@ -10,11 +10,11 @@ import 'react-html5-camera-photo/build/css/index.css';
 
 const props = {
     listType: 'picture',
-    /*showUploadList: false,*/
     action: UPLOAD,
     beforeUpload: beforeUpload,
     transformFile: transformFile,
     className: 'upload-list-inline',
+    imageUrl:''
 }
 
 class RegisterPC extends React.Component {
@@ -27,7 +27,6 @@ class RegisterPC extends React.Component {
     state = {
         fileList: [],
         pageLoading: false,
-        Tips: true,
         Camera: false,
         dataUri:false
     };
@@ -73,7 +72,6 @@ class RegisterPC extends React.Component {
                 });
                 this.setState({
                     imageUrl: info.file.response.data,
-
                 });
 
             } else {
@@ -90,10 +88,6 @@ class RegisterPC extends React.Component {
     };
 
     onUserRegister = (values) => {
-        if (!values.headImgPath) {
-            this.setState({Tips: false});
-            return false
-        }
         this.setState({
             pageLoading: true
         });
@@ -101,7 +95,7 @@ class RegisterPC extends React.Component {
         if (values.cardType === '1' && !regExp.test(values.idCard)) {
             return this.Notice('Fail', 'Please check your NRIC number');
         }
-        values.headImgPath = this.state.imageUrl;
+       // values.headImgPath = this.state.imageUrl;
         values.identificationCode = this.props.identificationCode;
         UserRegister(values).then((res) => {
             switch (res.code) {
@@ -181,8 +175,13 @@ class RegisterPC extends React.Component {
         postPhoto(data).then(res=>{
             if(res.code===200){
                fileList.status= 'done';
-                fileList.url=res.data.url;
-               // this.setState({fileList:fileList});
+                fileList.url=res.data;
+                this.formRef.current.setFieldsValue({
+                    headImgPath: res.data,
+                });
+                this.setState({
+                    imageUrl: res.data,
+                });
             }else{
                 fileList.status= 'error';
             }
@@ -205,6 +204,12 @@ class RegisterPC extends React.Component {
                 span: 18,
             },
         };
+        const formItemLayout={
+            wrapperCol: {
+                span: 18,
+                offset: 6,
+            },
+        }
         const tailFormItemLayout = {
             wrapperCol: {
                 span: 24,
@@ -270,7 +275,12 @@ class RegisterPC extends React.Component {
                     >
                         <Input addonBefore={prefixSelector} placeholder="ID Number" maxLength={30}/>
                     </Form.Item>
-                    <Form.Item className="avatar-box" name="headImgPath" label="photograph"
+                    <Form.Item className="avatar-box" name="headImgPath"
+                               label={ <span>Photograph&nbsp;
+                                   <Tooltip title="Please upload a recent photograph of yourself without mask.">
+                                        <QuestionCircleOutlined />
+                                   </Tooltip>
+                               </span>}
                                rules={[{required: true, message: 'Please upload photo'}]}>
 
                             <Button className="marginR20" onClick={() => this.TakePhoto(true)}>
@@ -314,10 +324,10 @@ class RegisterPC extends React.Component {
                         />}
 
                     </Modal>
-                    <Form.Item label="Privacy Clause">
+                    <Form.Item  {...formItemLayout} >
                         <Form.Item name='agreement' valuePropName="checked" noStyle
                                    rules={[
-                                       {validator: (_, value) => value ? Promise.resolve() : Promise.reject('Consent required')},
+                                       /*{validator: (_, value) => value ? Promise.resolve() : Promise.reject('Consent required')},*/
                                    ]}>
                             <Checkbox>I have read and agreed to the</Checkbox>
                         </Form.Item>

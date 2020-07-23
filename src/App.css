@@ -175,7 +175,7 @@
 }
 
 .react-html5-camera-photo > img, .react-html5-camera-photo > video {
-  width: 100%;
+  width: 90%;
 }
 
 /************camera*************/
@@ -184,7 +184,7 @@
   text-align: center;
 }
 .demo-image-preview > img {
-  width: 100%;
+  width: 90%;
 }
 .anticon.anticon-delete{
   display: none;

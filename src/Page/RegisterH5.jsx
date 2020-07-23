@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Checkbox, Form, Input, Modal, Select, Spin, Upload} from 'antd';
-import {UPLOAD} from '../ajax/Urls'
+import {UPLOADPHONE} from '../ajax/Urls'
 import {IdcardOutlined, LoadingOutlined, MobileOutlined, PlusOutlined, UserOutlined} from '@ant-design/icons';
 import {beforeUpload, transformFile} from '../Plugin/UpLoad'
 import {getAgreements, UserRegister} from '../ajax/Index'
@@ -9,7 +9,7 @@ import logo from "../Images/logo.png";
 const props = {
     listType: "picture-card",
     showUploadList: false,
-    action: UPLOAD,
+    action: UPLOADPHONE,
     beforeUpload: beforeUpload,
     transformFile: transformFile
 
