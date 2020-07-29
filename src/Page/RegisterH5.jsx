@@ -267,7 +267,7 @@ class RegisterH5 extends React.Component {
                             type: "email",
                             message: 'Please input a valid Email'
                         }]}>
-                            <Input prefix={<MailOutlined className="site-form-item-icon"/>}/>
+                            <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email"/>
                         </Form.Item>)}
                         <Form.Item>
                             <Form.Item name='agreement' valuePropName="checked" noStyle

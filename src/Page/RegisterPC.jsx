@@ -290,7 +290,7 @@ class RegisterPC extends React.Component {
                         type: "email",
                         message: 'Please input a valid Email'
                     }]}>
-                        <Input prefix={<MailOutlined className="site-form-item-icon"/>}/>
+                        <Input prefix={<MailOutlined className="site-form-item-icon"/> } placeholder="Email"/>
                     </Form.Item>)}
                     <Form.Item className="avatar-box" name="headImgPath"
                                label={<span>Photograph&nbsp;
@@ -344,7 +344,7 @@ class RegisterPC extends React.Component {
                     <Form.Item  {...formItemLayout} >
                         <Form.Item name='agreement' valuePropName="checked" noStyle
                                    rules={[
-                                       /*{validator: (_, value) => value ? Promise.resolve() : Promise.reject('Consent required')},*/
+                                       {validator: (_, value) => value ? Promise.resolve() : Promise.reject('Consent required')},
                                    ]}>
                             <Checkbox>I have read and agreed to the</Checkbox>
                         </Form.Item>
