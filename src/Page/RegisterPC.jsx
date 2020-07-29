@@ -229,7 +229,7 @@ class RegisterPC extends React.Component {
         const prefixSelector = (
             <Form.Item name="cardType" noStyle>
                 <Select style={{width: 122, textAlign: 'left'}}>
-                    <Select.Option value="1"><IdcardOutlined className="site-form-item-icon"/> NRIC</Select.Option>
+                    <Select.Option value="1"><IdcardOutlined className="site-form-item-icon"/> NRIC/FIN</Select.Option>
                     <Select.Option value="2"><IdcardOutlined className="site-form-item-icon"/> Passport</Select.Option>
                 </Select>
             </Form.Item>
