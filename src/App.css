@@ -193,3 +193,7 @@
   height: auto;
 
 }
+.info{
+  height: 50vh !important;
+  overflow: auto;
+}
