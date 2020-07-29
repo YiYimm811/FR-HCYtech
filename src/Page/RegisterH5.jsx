@@ -1,7 +1,14 @@
 import React from 'react';
 import {Button, Checkbox, Form, Input, Modal, Select, Spin, Upload} from 'antd';
 import {UPLOADPHONE} from '../ajax/Urls'
-import {IdcardOutlined, LoadingOutlined, MobileOutlined, PlusOutlined, UserOutlined} from '@ant-design/icons';
+import {
+    IdcardOutlined,
+    LoadingOutlined,
+    MailOutlined,
+    MobileOutlined,
+    PlusOutlined,
+    UserOutlined
+} from '@ant-design/icons';
 import {beforeUpload, transformFile} from '../Plugin/UpLoad'
 import {getAgreements, UserRegister} from '../ajax/Index'
 import logo from "../Images/logo.png";
@@ -11,7 +18,7 @@ const props = {
     showUploadList: false,
     action: UPLOADPHONE,
     beforeUpload: beforeUpload,
-    transformFile: transformFile
+    transformFile: transformFile,
 
 }
 
@@ -24,7 +31,8 @@ class RegisterH5 extends React.Component {
     state = {
         loading: false,
         pageLoading: false,
-        Tips: true
+        Tips: true,
+        isEmailShow:(this.props.identificationCode.length===10)?true:false
     };
 
     Agreement() {
@@ -190,7 +198,7 @@ class RegisterH5 extends React.Component {
                 </Select>
             </Form.Item>
         );
-        const {imageUrl, pageLoading, TipsColor, Tips} = this.state;
+        const {imageUrl, pageLoading, isEmailShow, Tips} = this.state;
         return (
             <Spin tip="Loading..." spinning={pageLoading}>
                 <div className="text-center padding30">
@@ -254,6 +262,13 @@ class RegisterH5 extends React.Component {
                         >
                             <Input addonBefore={prefixSelector} placeholder="ID Number" maxLength={30}/>
                         </Form.Item>
+
+                        {isEmailShow&&(<Form.Item name='email' rules={[{required: true, message: "Required field"}, {
+                            type: "email",
+                            message: 'Please input a valid Email'
+                        }]}>
+                            <Input prefix={<MailOutlined className="site-form-item-icon"/>}/>
+                        </Form.Item>)}
                         <Form.Item>
                             <Form.Item name='agreement' valuePropName="checked" noStyle
                                        rules={[

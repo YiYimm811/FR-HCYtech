@@ -1,7 +1,15 @@
 import React from 'react';
-import {Button, Checkbox, Form, Input, Modal, Select, Space, Spin, Upload,Tooltip} from 'antd';
+import {Button, Checkbox, Form, Input, Modal, Select, Space, Spin, Tooltip, Upload} from 'antd';
 import {UPLOAD} from '../ajax/Urls'
-import {IdcardOutlined, MobileOutlined, UploadOutlined, UserOutlined,CameraOutlined,QuestionCircleOutlined} from '@ant-design/icons';
+import {
+    CameraOutlined,
+    IdcardOutlined,
+    MailOutlined,
+    MobileOutlined,
+    QuestionCircleOutlined,
+    UploadOutlined,
+    UserOutlined
+} from '@ant-design/icons';
 import {beforeUpload, transformFile} from '../Plugin/UpLoad'
 import {getAgreements, postPhoto, UserRegister} from '../ajax/Index'
 import logo from "../Images/logo.png";
@@ -28,7 +36,8 @@ class RegisterPC extends React.Component {
         fileList: [],
         pageLoading: false,
         Camera: false,
-        dataUri:false
+        dataUri: false,
+        isEmailShow: (this.props.identificationCode.length === 10) ? true : false
     };
 
     Agreement() {
@@ -225,7 +234,7 @@ class RegisterPC extends React.Component {
                 </Select>
             </Form.Item>
         );
-        const {pageLoading,dataUri} = this.state;
+        const {pageLoading, dataUri, isEmailShow} = this.state;
         return (
             <Spin tip="Loading..." spinning={pageLoading}>
                 <div className="text-center padding30">
@@ -275,16 +284,24 @@ class RegisterPC extends React.Component {
                     >
                         <Input addonBefore={prefixSelector} placeholder="ID Number" maxLength={30}/>
                     </Form.Item>
+                  { isEmailShow&&( <Form.Item name='email'
+                               label="Email"
+                               rules={[{required: true, message: "Required field"}, {
+                        type: "email",
+                        message: 'Please input a valid Email'
+                    }]}>
+                        <Input prefix={<MailOutlined className="site-form-item-icon"/>}/>
+                    </Form.Item>)}
                     <Form.Item className="avatar-box" name="headImgPath"
-                               label={ <span>Photograph&nbsp;
+                               label={<span>Photograph&nbsp;
                                    <Tooltip title="Please upload a recent photograph of yourself without mask.">
-                                        <QuestionCircleOutlined />
+                                        <QuestionCircleOutlined/>
                                    </Tooltip>
                                </span>}
                                rules={[{required: true, message: 'Please upload photo'}]}>
 
-                            <Button className="marginR20" onClick={() => this.TakePhoto(true)}>
-                                <CameraOutlined/>Take Photo
+                        <Button className="marginR20" onClick={() => this.TakePhoto(true)}>
+                            <CameraOutlined/>Take Photo
                             </Button>
                         <Form.Item noStyle>
                             <Upload name="file"

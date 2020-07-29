@@ -13,6 +13,8 @@ class Register extends React.Component {
         if (window.location.pathname.substring(1)) {
             const array = window.location.pathname.substring(1).split('/');
             this.state.identificationCode = array[0];
+        }else{
+            this.state.identificationCode = [];
         }
 
     }
