@@ -52,7 +52,7 @@ class RegisterPC extends React.Component {
     }
 
     handleChange = info => {
-
+//
         if (info.file.status === 'uploading') {
             let fileList = [...info.fileList];
             fileList = fileList.slice(-1);
