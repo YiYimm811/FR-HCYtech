@@ -39,13 +39,15 @@ class RegisterPC extends React.Component {
         dataUri: false,
         isEmailShow: (this.props.identificationCode.length === 10) ? true : false
     };
-
-    Agreement() {
+    Agreement=()=> {
         getAgreements().then((res) => {
             if (res.code === 200) {
                 Modal.info({
                     title: 'Privacy Clause',
                     content: (<div className="info" dangerouslySetInnerHTML={{__html: res.data}}></div>),
+                    onOk:()=>{
+                        this.formRef.current.setFieldsValue({agreement:true})
+                    }
                 })
             }
         })
